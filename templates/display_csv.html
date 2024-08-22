@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Display - {{ filename }}</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        table.data {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+        table.data th {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+            background-color: #007bff; /* Header background color */
+            color: white; /* Header text color */
+        }
+        table.data td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSV Data - {{ filename }}</h1>
+        <div class="table-container">
+            {{ tables|safe }}
+        </div>
+    </div>
+
+    <!-- jQuery and DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Initialize DataTables on the table with class 'data'
+            $('table.data').DataTable({
+                "scrollX": true, // Enable horizontal scrolling
+                "scrollY": "400px", // Enable vertical scrolling with a fixed height
+                "paging": true, // Enable pagination
+                "searching": true, // Enable search feature
+                "ordering": true, // Enable column sorting
+                "scrollCollapse": true, // Allow the table to reduce in height if fewer rows are displayed
+            });
+        });
+    </script>
+</body>
+</html>

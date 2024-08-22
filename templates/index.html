@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCMS Pipeline</title>
+    <p><a href="{{ url_for('info') }}">Learn more about the LCMS Pipeline and its requirements</a></p>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        input[type="file"] {
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .progress-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-inner {
+            width: 0;
+            height: 24px;
+            background-color: #28a745;
+            text-align: center;
+            line-height: 24px;
+            color: white;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        function showProgress() {
+            document.getElementById('progress-container').style.display = 'block';
+            let progressBar = document.getElementById('progress-bar-inner');
+            let width = 0;
+            let interval = setInterval(function () {
+                if (width >= 100) {
+                    clearInterval(interval);
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                    progressBar.innerHTML = width + '%';
+                }
+            }, 100);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Run LCMS Pipeline</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data" onsubmit="showProgress()">
+            <label for="smiles_file">Upload SMILES File:</label>
+            <input type="file" name="smiles_file" id="smiles_file" required>
+
+            <label for="params_file">Upload Parameters File:</label>
+            <input type="file" name="params_file" id="params_file" required>
+
+            <label for="samples_file">Upload Samples File:</label>
+            <input type="file" name="samples_file" id="samples_file" required>
+
+            <label for="mzml_files">Upload mzML Files:</label>
+            <input type="file" name="mzml_files" id="mzml_files" multiple required>
+
+            <button type="submit">Run Pipeline and Display Results</button>
+        </form>
+        <div id="progress-container" class="progress-container">
+            <div class="progress-bar">
+                <div id="progress-bar-inner" class="progress-bar-inner">0%</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

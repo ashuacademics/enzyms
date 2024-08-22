@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCMS Data Analysis Pipeline - README</title>
+</head>
+<body>
+    <h1>LCMS Data Analysis Pipeline</h1>
+    <p>The LCMS (Liquid Chromatography-Mass Spectrometry) Data Analysis Pipeline is designed to streamline and automate the analysis of LCMS data. This pipeline takes input in the form of SMILES files, parameter files, and sample lists, processes the data using specified configurations, and outputs analyzed data in a variety of formats including CSV and images.</p>
+
+    <h2>Features:</h2>
+    <ul>
+        <li><strong>Automated LCMS Data Analysis</strong>: Streamline the processing and analysis of LCMS data with a single pipeline.</li>
+        <li><strong>Multiple Input Types</strong>: Accepts SMILES files, parameter configuration files, and sample lists.</li>
+        <li><strong>Customizable Analysis</strong>: Adjust analysis parameters through the parameter file.</li>
+        <li><strong>Versatile Output</strong>: Generates a range of output files, including CSVs and images, which can be viewed or downloaded.</li>
+    </ul>
+
+    <h2>Required Input</h2>
+    <p>To run the LCMS Data Analysis Pipeline, you need the following inputs:</p>
+    <ul>
+        <li><strong>SMILES File</strong> (<code>*.smi</code>): Contains the molecular structure in SMILES format.</li>
+        <li><strong>Parameter File</strong> (<code>parameters.yaml</code>): Configuration file specifying the analysis parameters.</li>
+        <li><strong>Sample List File</strong> (<code>samples.txt</code>): Contains the list of samples to be analyzed.</li>
+        <li><strong>mzML Files</strong> (<code>*.mzML</code>): Raw data files from LCMS to be analyzed.</li>
+    </ul>
+
+    <h2>Installation and Usage</h2>
+    <p>You can run the LCMS Data Analysis Pipeline in several ways:</p>
+
+    <h3>1. Running as a Docker Container</h3>
+    <h4>Prerequisites</h4>
+    <p><a href="https://docs.docker.com/get-docker/" target="_blank">Docker</a> must be installed on your system.</p>
+
+    <h4>Steps to Run</h4>
+    <ol>
+        <li><strong>Build the Docker Image</strong>:
+            <pre><code>docker build -t lcms-pipeline .</code></pre>
+        </li>
+        <li><strong>Run the Pipeline</strong>:
+            <pre><code>docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output lcms-pipeline --smi_file /usr/src/app/input/CPD041.smi --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files</code></pre>
+            <ul>
+                <li><code>input</code>: Directory containing the input files.</li>
+                <li><code>output</code>: Directory where the results will be saved.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>2. Running as a Conda Environment</h3>
+    <h4>Prerequisites</h4>
+    <p><a href="https://docs.anaconda.com/anaconda/install/" target="_blank">Anaconda</a> or <a href="https://docs.conda.io/en/latest/miniconda.html" target="_blank">Miniconda</a> must be installed.</p>
+
+    <h4>Steps to Install and Run</h4>
+    <ol>
+        <li><strong>Create a Conda Environment</strong>:
+            <pre><code>conda create -n lcms-pipeline python=3.8
+conda activate lcms-pipeline</code></pre>
+        </li>
+        <li><strong>Install Required Packages</strong>:
+            <pre><code>pip install -r requirements.txt</code></pre>
+        </li>
+        <li><strong>Run the Shell Script</strong>:
+            <pre><code>bash pipeline.sh --smi_file input/CPD041.smi --params_file input/parameters.yaml --samples_file input/list_of_samples.txt --mzml_dir input/mzML-files</code></pre>
+        </li>
+    </ol>
+
+    <h3>3. Running as a Web Application</h3>
+    <h4>Prerequisites</h4>
+    <ul>
+        <li><a href="https://docs.anaconda.com/anaconda/install/" target="_blank">Anaconda</a> or <a href="https://docs.conda.io/en/latest/miniconda.html" target="_blank">Miniconda</a> must be installed.</li>
+        <li><a href="https://flask.palletsprojects.com/" target="_blank">Flask</a> and other dependencies as listed in <code>requirements.txt</code>.</li>
+    </ul>
+
+    <h4>Steps to Run</h4>
+    <ol>
+        <li><strong>Create a Conda Environment</strong>:
+            <pre><code>conda create -n lcms-webapp python=3.8
+conda activate lcms-webapp</code></pre>
+        </li>
+        <li><strong>Install Required Packages</strong>:
+            <pre><code>pip install -r requirements.txt</code></pre>
+        </li>
+        <li><strong>Run the Flask Application</strong>:
+            <pre><code>python app.py</code></pre>
+        </li>
+        <li><strong>Access the Web Application</strong>:
+            <p>Open your web browser and navigate to <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a>. You can upload the required files and run the pipeline through the web interface.</p>
+        </li>
+    </ol>
+
+    <h2>Example Run</h2>
+
+    <h3>Running via Docker</h3>
+    <p>Assuming your input files are located in the <code>input/</code> directory and you want to save the output to the <code>output/</code> directory:</p>
+    <pre><code>docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output lcms-pipeline --smi_file /usr/src/app/input/CPD041.smi --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files</code></pre>
+
+    <h3>Running via Shell Script in Conda Environment</h3>
+    <p>Assuming you have activated your Conda environment and your input files are in the <code>input/</code> directory:</p>
+    <pre><code>bash pipeline.sh --smi_file input/CPD041.smi --params_file input/parameters.yaml --samples_file input/list_of_samples.txt --mzml_dir input/mzML-files</code></pre>
+
+    <h3>Running via Web Application</h3>
+    <ol>
+        <li><strong>Start the Web Application</strong>:
+            <pre><code>python app.py</code></pre>
+        </li>
+        <li><strong>Access the Web Application</strong>:
+            <p>Navigate to <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a> in your browser, upload the input files, and run the pipeline through the interface.</p>
+        </li>
+    </ol>
+
+    <h2>Example Input Files</h2>
+    <ul>
+        <li><strong>SMILES File (<code>CPD041.smi</code>)</strong>:
+            <pre><code>C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO</code></pre>
+        </li>
+        <li><strong>Parameter File (<code>parameters.yaml</code>)</strong>:
+            <pre><code>mode: pos
+tolerance: 0.01
+adducts:
+  - [M+H]+</code></pre>
+        </li>
+        <li><strong>Sample List File (<code>samples.txt</code>)</strong>:
+            <pre><code>sample1.mzML
+sample2.mzML</code></pre>
+        </li>
+        <li><strong>mzML Directory</strong>:
+            <ul>
+                <li><code>sample1.mzML</code></li>
+                <li><code>sample2.mzML</code></li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>License</h2>
+    <p>This project is licensed under the MIT License. See the <code>LICENSE</code> file for more details.</p>
+
+    <h2>Contributing</h2>
+    <p>If you would like to contribute to this project, please submit a pull request or open an issue.</p>
+
+    <h2>Support</h2>
+    <p>If you encounter any issues or have questions, please open an issue in this repository or contact the project maintainers.</p>
+</body>
+</html>

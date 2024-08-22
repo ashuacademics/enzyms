@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCMS Pipeline Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+        p, pre {
+            line-height: 1.6;
+            color: #333;
+        }
+        ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LCMS Pipeline Information</h1>
+
+        <h2>Pipeline Overview</h2>
+        <p>The LCMS (Liquid Chromatography-Mass Spectrometry) pipeline processes and analyzes mass spectrometry data, particularly from LCMS-QTOF instruments. The pipeline is designed to detect and align features across multiple samples, enabling researchers to identify and quantify compounds in complex biological mixtures.</p>
+
+        <h2>Inputs Required</h2>
+        <p>The pipeline requires the following input files:</p>
+        <ul>
+            <li><strong>SMILES File:</strong> A file containing the SMILES strings representing the chemical structure of the substrates.</li>
+            <li><strong>Parameters File:</strong> A file with parameters for feature detection and alignment, including mass tolerance, retention time windows, etc.</li>
+            <li><strong>Samples File:</strong> A CSV file listing the samples and their corresponding enzymes or treatments, formatted as:</li>
+        </ul>
+        <pre>
+Enzyme,Sample
+CPD041_EVC1,evc
+CPD041_EVC2,evc
+CPD041_EVC3,evc
+CPD041_KGD001,sample
+CPD041_KGD002,sample
+CPD041_KGD003,sample
+CPD041_KGD005,sample
+CPD041_KGD007,sample
+CPD041_KGD008,sample
+        </pre>
+        <ul>
+            <li><strong>mzML Files:</strong> Mass spectrometry data files in the mzML format, converted from the raw .d format using ProteoWizard. <a href="https://proteowizard.sourceforge.io/download.html" target="_blank">Download ProteoWizard</a></li>
+        </ul>
+    </div>
+</body>
+</html>
