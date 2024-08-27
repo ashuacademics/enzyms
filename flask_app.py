@@ -29,15 +29,18 @@ def info():
 def upload_files():
     # Save uploaded files
     smiles_file = request.files['smiles_file']
+    variations_file = request.files['variations_file']
     params_file = request.files['params_file']
     samples_file = request.files['samples_file']
     mzml_files = request.files.getlist('mzml_files')
     
     smiles_file_path = os.path.join(app.config['UPLOAD_FOLDER'], smiles_file.filename)
+    variations_file_path = os.path.join(app.config['UPLOAD_FOLDER'], variations_file.filename)
     params_file_path = os.path.join(app.config['UPLOAD_FOLDER'], params_file.filename)
     samples_file_path = os.path.join(app.config['UPLOAD_FOLDER'], samples_file.filename)
     
     smiles_file.save(smiles_file_path)
+    variations_file.save(variations_file_path)
     params_file.save(params_file_path)
     samples_file.save(samples_file_path)
 
@@ -48,12 +51,13 @@ def upload_files():
 
     # Run Docker command
     docker_command = [
-        "docker", "run",
+        "docker", "run", "--rm",
         "-v", f"{os.path.abspath(app.config['UPLOAD_FOLDER'])}:/usr/src/app/input",
         "-v", f"{os.path.abspath(app.config['OUTPUT_FOLDER'])}:/usr/src/app/output",
         "-v", f"{os.path.abspath(app.config['MZML_FOLDER'])}:/usr/src/app/input/mzML-files",
-        "lcms-pipeline",
+        "enzyms",
         "--smi_file", f"/usr/src/app/input/{smiles_file.filename}",
+        "--variations_file", f"/usr/src/app/input/{variations_file.filename}",
         "--params_file", f"/usr/src/app/input/{params_file.filename}",
         "--samples_file", f"/usr/src/app/input/{samples_file.filename}",
         "--mzml_dir", "/usr/src/app/input/mzML-files"
@@ -79,15 +83,8 @@ def detect_delimiter(csv_file):
         delimiter = sniffer.sniff(first_line).delimiter
         return delimiter
 
-@app.route('/results', methods=['GET', 'POST'])
+@app.route('/results', methods=['GET'])
 def results():
-    # Handle feedback form submission
-    if request.method == 'POST':
-        feedback = request.form['feedback']
-        # Here you can process the feedback, e.g., save it to a file or send it via email
-        flash('Thank you for your feedback!', 'success')
-        return redirect(url_for('results'))
-
     # Display available files in the output directory
     files = os.listdir(app.config['OUTPUT_FOLDER'])
     return render_template('results.html', files=files)
@@ -108,24 +105,21 @@ def display_csv(filename):
     delimiter = detect_delimiter(csv_path)
     df = pd.read_csv(csv_path, delimiter=delimiter)
 
-    # Clean the data by stripping leading and trailing spaces from columns and rows
+    # Clean the data
     df.columns = df.columns.str.strip()
     df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
-
-    # Remove rows that are completely empty (all NaNs or spaces)
     df.dropna(how='all', inplace=True)
-
-    # Remove rows that are effectively empty (containing only whitespace)
     df = df[~(df.applymap(lambda x: isinstance(x, str) and x.strip() == '').all(axis=1))]
-
-    # Convert scientific notation to human-readable numbers
     pd.options.display.float_format = '{:.2f}'.format
-
-    # Remove excessive whitespace from dataframe values
     df = df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
 
-    # Pass the cleaned dataframe to the template with scrollable style
-    return render_template('display_csv.html', tables=[df.to_html(classes='data', header="true", index=False)], filename=filename.rsplit('.', 1)[0])
+    # Generate the table HTML
+    table_html = df.to_html(classes='data table table-striped', header="true", index=False)
+
+    # Ensure no extraneous whitespace or characters
+    table_html = table_html.strip()
+
+    return render_template('display_csv.html', tables=table_html, filename=filename.rsplit('.', 1)[0])
 
 @app.route('/download/<filename>')
 def download_zip(filename):

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCMS Pipeline</title>
+    <title>EnzyMS: LC-MS Data Analysis Pipeline for Enzyme Biocatalysis</title>
     <p><a href="{{ url_for('info') }}">Learn more about the LCMS Pipeline and its requirements</a></p>
     <style>
         body {
@@ -91,13 +91,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>Run LCMS Pipeline</h1>
+        <h1>Run EnzyMS Pipeline</h1>
         <form action="/upload" method="post" enctype="multipart/form-data" onsubmit="showProgress()">
             <label for="smiles_file">Upload SMILES File:</label>
             <input type="file" name="smiles_file" id="smiles_file" required>
 
             <label for="params_file">Upload Parameters File:</label>
             <input type="file" name="params_file" id="params_file" required>
+
+            <label for="variations_file">Upload Variations Param File:</label>
+            <input type="file" name="variations_file" id="variations_file" required>
 
             <label for="samples_file">Upload Samples File:</label>
             <input type="file" name="samples_file" id="samples_file" required>

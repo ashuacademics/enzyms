@@ -2,6 +2,29 @@ import os
 import argparse
 import pandas as pd
 
+
+'''
+This script processes the peak area data from Asari calculations. The script reads the peak area data from the CSV files and processes it based on the following steps:
+1. Remove rows matching the m/z of the substrate compound with a tolerance of 0.01.
+2. Remove the mean and std calculation for control columns when there's only one control column.
+3. Filter the data based on the following conditions:
+    - Retain rows where the m/z is within 100 units of the compound m/z.
+    - Remove rows where the m/z is within 0.05 units of the compound m/z.
+4. Save the processed and filtered data to a new CSV file in the specified output directory.
+5. Create an additional output file with transposed data containing peak areas.
+
+Usage:
+
+python process_peak_area.py --csv_directory [csv_directory] --compound_mz_file [compound_mz_file] --column_type_file [column_type_file] --output_directory [output_directory]
+
+Arguments:
+--csv_directory: Directory containing the CSV files.
+--compound_mz_file: Path to the compound m/z file.
+--column_type_file: Path to the file with column types.
+--output_directory: Directory where processed files will be saved.
+
+'''
+
 def extract_compound_name(filename):
     return filename.split('_')[0]
 

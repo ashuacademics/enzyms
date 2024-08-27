@@ -1,10 +1,13 @@
 #!/bin/bash
-
-#!/bin/bash
+# File              : run_pipeline.sh
+# Author            : Ashutosh Kumar <kums@zhaw.ch>
+# Date              : 27.08.2024
+# Last Modified Date: 27.08.2024
+# Last Modified By  : Ashutosh Kumar <kums@zhaw.ch>
 
 # Ensure all necessary arguments are provided
-if [ $# -ne 8 ]; then
-    echo "Usage: $0 --smi_file <smi_file> --params_file <asari_parameters_file> --samples_file <list_of_samples_file> --mzml_dir <mzML_directory>"
+if [ $# -ne 10 ]; then
+    echo "Usage: $0 --smi_file <smi_file> --variations_file <variations_param_file> --params_file <asari_parameters_file> --samples_file <list_of_samples_file> --mzml_dir <mzML_directory>"
     exit 1
 fi
 
@@ -12,6 +15,7 @@ fi
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --smi_file) smi_file="$2"; shift ;;
+        --variations_file) variations_param_file="$2"; shift ;;
         --params_file) asari_params_file="$2"; shift ;;
         --samples_file) list_of_samples_file="$2"; shift ;;
         --mzml_dir) mzml_dir="$2"; shift ;;
@@ -30,10 +34,10 @@ asari process --mode pos --input "${mzml_dir}" --reference "${mzml_dir}/${compou
 cp ${compound_name}_asari_project*/export/full_Feature_table.tsv ${compound_name}_areas.csv
 
 # Calculate m/z of substrate
-python3 scripts/calculate_substrate_mz.py --input_file ${compound_name}.smi --output_file substrate_mz.csv --adduct "[M+H+]" --mode pos
+python3 scripts/calculate_substrate_mz.py --input_file ${compound_name}.smi --output_file substrate_mz.csv --parameters_file "$variations_param_file"
 
 # Calculate m/z of anticipated products
-python3 scripts/calculate_anticipated_products_mz.py --input_file ${compound_name}.smi --output_file Anticipated_products_mz.txt --adduct "[M+H+]" --mode pos --H_variation -4 4 --C_variation -1 0 --O_variation 0 3 --N_variation 0 0 --F_variation -1 0
+python3 scripts/calculate_anticipated_products_mz.py --input_file ${compound_name}.smi --output_file Anticipated_products_mz.txt --parameters_file "$variations_param_file"
 
 # Adjust peak areas
 python3 scripts/process_peak_area.py --csv_directory ./ --compound_mz_file substrate_mz.csv --column_type_file "$list_of_samples_file" --output_directory ./
@@ -54,6 +58,6 @@ mkdir -p output
 find . -maxdepth 1 -type f \( -name "*.csv" -o -name "*.png" \) -exec mv {} output/ \;
 
 # Ensure the files in the output directory have the correct permissions to be removed later
-chmod -R 755 output
+chmod -R 777 output
 
-echo "Pipeline execution completed for compound: $compound_name"
+echo "EnzyMS Pipeline execution completed for compound: $compound_name"

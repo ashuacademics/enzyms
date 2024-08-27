@@ -27,23 +27,23 @@
         }
         .table-container {
             margin-top: 20px;
+            overflow-x: auto; /* Horizontal scroll */
         }
         table.data {
             width: 100%;
             border-collapse: collapse;
             margin: 0 auto;
+            table-layout: auto; /* Flexible layout for adaptive column widths */
+        }
+        table.data th, table.data td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+            white-space: nowrap; /* Prevent text wrapping */
         }
         table.data th {
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd;
-            background-color: #007bff; /* Header background color */
-            color: white; /* Header text color */
-        }
-        table.data td {
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd;
+            background-color: #007bff;
+            color: white;
         }
     </style>
 </head>
@@ -60,14 +60,28 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            // Initialize DataTables on the table with class 'data'
+            var columnCount = $('table.data thead th').length;
+
+            // Adjust table-layout based on the number of columns
+            if (columnCount > 10) {
+                $('table.data').css('table-layout', 'auto');
+            } else {
+                $('table.data').css('table-layout', 'fixed');
+            }
+
             $('table.data').DataTable({
-                "scrollX": true, // Enable horizontal scrolling
-                "scrollY": "400px", // Enable vertical scrolling with a fixed height
-                "paging": true, // Enable pagination
-                "searching": true, // Enable search feature
-                "ordering": true, // Enable column sorting
-                "scrollCollapse": true, // Allow the table to reduce in height if fewer rows are displayed
+                "scrollX": true,
+                "scrollY": "400px",
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "scrollCollapse": true,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                "order": [[0, "asc"]],
+                "autoWidth": false,
+                "columnDefs": [
+                    { "width": "10%", "targets": 0 },
+                ]
             });
         });
     </script>
