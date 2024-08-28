@@ -1,6 +1,6 @@
-# LCMS Data Analysis Pipeline
+# EnzyMS LCMS Data Analysis Pipeline
 
-The LCMS (Liquid Chromatography-Mass Spectrometry) Data Analysis Pipeline is designed to streamline and automate the analysis of LCMS data. This pipeline takes input in the form of SMILES files, parameter files, and sample lists, processes the data using specified configurations, and outputs analyzed data in a variety of formats including CSV and images.
+The EnzyMS LCMS Data Analysis Pipeline is designed to streamline and automate the analysis of LCMS-QTOF data. This pipeline takes input in the form of SMILES files, parameter files for formula generation and feature detection, and sample lists, processes the data using specified configurations, and outputs analyzed data in a variety of formats including CSV and images.
 
 ## Features:
 
@@ -14,9 +14,10 @@ The LCMS (Liquid Chromatography-Mass Spectrometry) Data Analysis Pipeline is des
 To run the LCMS Data Analysis Pipeline, you need the following inputs:
 
 - **SMILES File** (`*.smi`): Contains the molecular structure in SMILES format.
+- **Variations Parameter File** (`variations.param`); Contains adduct ion and mode information. Also contains information about atomic variations for anticipated products.  
 - **Parameter File** (`parameters.yaml`): Configuration file specifying the analysis parameters.
 - **Sample List File** (`samples.txt`): Contains the list of samples to be analyzed.
-- **mzML Files** (`*.mzML`): Raw data files from LCMS to be analyzed.
+- **mzML Files** (`*.mzML`): Raw data files from LCMS to be analyzed. Agilent '.d' can be converted to .mzML format using ProteoWizard's msConvert program. [ProteoWizard](https://proteowizard.sourceforge.io/download.html)
 
 ## Installation and Usage
 
@@ -30,11 +31,11 @@ You can run the LCMS Data Analysis Pipeline in several ways:
 #### Steps to Run
 1. **Build the Docker Image**:
     ```bash
-    docker build -t lcms-pipeline .
+    docker build -t enzyms .
     ```
 2. **Run the Pipeline**:
     ```bash
-    docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output lcms-pipeline --smi_file /usr/src/app/input/CPD041.smi --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files
+    docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output lcms-pipeline --smi_file /usr/src/app/input/CPD041.smi --variations_file ./variations.param --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files
     ```
     - `input`: Directory containing the input files.
     - `output`: Directory where the results will be saved.
@@ -47,16 +48,16 @@ You can run the LCMS Data Analysis Pipeline in several ways:
 #### Steps to Install and Run
 1. **Create a Conda Environment**:
     ```bash
-    conda create -n lcms-pipeline python=3.8
-    conda activate lcms-pipeline
+    conda create -n enzyms python=3.11
+    conda activate enzyms
     ```
 2. **Install Required Packages**:
     ```bash
-    pip install -r requirements.txt
+    pip install asari-metabolomics rdkit pyopenms pandas matplotlib numpy==1.24.4
     ```
 3. **Run the Shell Script**:
     ```bash
-    bash pipeline.sh --smi_file input/CPD041.smi --params_file input/parameters.yaml --samples_file input/list_of_samples.txt --mzml_dir input/mzML-files
+    sh run_pipeline.sh --smi_file ./CPD041.smi --variations_file ./variations.param --params_file ./parameters.yaml --samples_file ./list_of_samples.txt --mzml_dir ./mzML-files
     ```
 
 ### 3. Running as a Web Application
@@ -68,24 +69,17 @@ You can run the LCMS Data Analysis Pipeline in several ways:
 #### Steps to Run
 1. **Create a Conda Environment**:
     ```bash
-    conda create -n lcms-webapp python=3.8
-    conda activate lcms-webapp
+    conda create -n enzyms-webapp python=3.11
+    conda activate enzyms-webapp
     ```
 2. **Install Required Packages**:
     ```bash
-    pip install -r requirements.txt
+    pip install asari-metabolomics rdkit pyopenms pandas matplotlib numpy==1.24.4
     ```
 3. **Run the Flask Application**:
     ```bash
-    python app.py
+    python enzyms_app.py
     ```
 4. **Access the Web Application**:
     Open your web browser and navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000). You can upload the required files and run the pipeline through the web interface.
 
-## Example Run
-
-### Running via Docker
-Assuming your input files are located in the `input/` directory and you want to save the output to the `output/` directory:
-
-```bash
-docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output lcms-pipeline --smi_file /usr/src/app/input/CPD041.smi --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files

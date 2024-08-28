@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCMS Pipeline Information</title>
+    <title>EnzyMS LCMS Data Analysis Pipeline</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,57 +19,131 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        h1, h2, h3, h4 {
+            color: #007bff;
+        }
         h1 {
             text-align: center;
-            color: #007bff;
             margin-bottom: 20px;
         }
         h2 {
-            color: #333;
             margin-top: 20px;
         }
-        p, pre {
+        p, pre, code {
             line-height: 1.6;
             color: #333;
         }
-        ul {
+        ul, ol {
             margin-top: 10px;
             padding-left: 20px;
         }
-        ul li {
+        ul li, ol li {
             margin-bottom: 10px;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f8f8f8;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>LCMS Pipeline Information</h1>
+        <h1>EnzyMS LCMS Data Analysis Pipeline</h1>
 
-        <h2>Pipeline Overview</h2>
-        <p>The LCMS (Liquid Chromatography-Mass Spectrometry) pipeline processes and analyzes mass spectrometry data, particularly from LCMS-QTOF instruments. The pipeline is designed to detect and align features across multiple samples, enabling researchers to identify and quantify compounds in complex biological mixtures.</p>
+        <p>The EnzyMS LCMS Data Analysis Pipeline is designed to streamline and automate the analysis of LCMS-QTOF data. This pipeline takes input in the form of SMILES files, parameter files for formula generation and feature detection, and sample lists, processes the data using specified configurations, and outputs analyzed data in a variety of formats including CSV and images.</p>
 
-        <h2>Inputs Required</h2>
-        <p>The pipeline requires the following input files:</p>
+        <h2>Features:</h2>
         <ul>
-            <li><strong>SMILES File:</strong> A file containing the SMILES strings representing the chemical structure of the substrates.</li>
-            <li><strong>Parameters File:</strong> A file with parameters for feature detection and alignment, including mass tolerance, retention time windows, etc.</li>
-            <li><strong>Samples File:</strong> A CSV file listing the samples and their corresponding enzymes or treatments, formatted as:</li>
+            <li><strong>Automated LCMS Data Analysis:</strong> Streamline the processing and analysis of LCMS data with a single pipeline.</li>
+            <li><strong>Multiple Input Types:</strong> Accepts SMILES files, parameter configuration files, and sample lists.</li>
+            <li><strong>Customizable Analysis:</strong> Adjust analysis parameters through the parameter file.</li>
+            <li><strong>Versatile Output:</strong> Generates a range of output files, including CSVs and images, which can be viewed or downloaded.</li>
         </ul>
-        <pre>
-Enzyme,Sample
-CPD041_EVC1,evc
-CPD041_EVC2,evc
-CPD041_EVC3,evc
-CPD041_KGD001,sample
-CPD041_KGD002,sample
-CPD041_KGD003,sample
-CPD041_KGD005,sample
-CPD041_KGD007,sample
-CPD041_KGD008,sample
-        </pre>
+
+        <h2>Required Input</h2>
+        <p>To run the LCMS Data Analysis Pipeline, you need the following inputs:</p>
         <ul>
-            <li><strong>mzML Files:</strong> Mass spectrometry data files in the mzML format, converted from the raw .d format using ProteoWizard. <a href="https://proteowizard.sourceforge.io/download.html" target="_blank">Download ProteoWizard</a></li>
+            <li><strong>SMILES File</strong> (<code>*.smi</code>): Contains the molecular structure in SMILES format.</li>
+            <li><strong>Variations Parameter File</strong> (<code>variations.param</code>): Contains adduct ion and mode information. Also contains information about atomic variations for anticipated products.</li>
+            <li><strong>Parameter File</strong> (<code>parameters.yaml</code>): Configuration file specifying the analysis parameters.</li>
+            <li><strong>Sample List File</strong> (<code>samples.txt</code>): Contains the list of samples to be analyzed.</li>
+            <li><strong>mzML Files</strong> (<code>*.mzML</code>): Raw data files from LCMS to be analyzed. Agilent '.d' can be converted to .mzML format using ProteoWizard's msConvert program. <a href="https://proteowizard.sourceforge.io/download.html" target="_blank">ProteoWizard</a></li>
         </ul>
+        
+
+        <h2>Installation and Usage</h2>
+        <p>You can run the LCMS Data Analysis Pipeline in several ways:</p>
+
+        <h3>1. Running as a Docker Container</h3>
+        <h4>Prerequisites</h4>
+        <p><a href="https://docs.docker.com/get-docker/" target="_blank">Docker</a> must be installed on your system.</p>
+
+        <h4>Steps to Run</h4>
+        <ol>
+            <li><strong>Build the Docker Image:</strong></li>
+            <pre><code>docker build -t enzyms .</code></pre>
+
+            <li><strong>Run the Pipeline:</strong></li>
+            <pre><code>docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output lcms-pipeline --smi_file /usr/src/app/input/CPD041.smi --variations_file ./variations.param --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files</code></pre>
+            <ul>
+                <li><code>input</code>: Directory containing the input files.</li>
+                <li><code>output</code>: Directory where the results will be saved.</li>
+            </ul>
+        </ol>
+
+        <h3>2. Running as a Conda Environment</h3>
+        <h4>Prerequisites</h4>
+        <p><a href="https://docs.anaconda.com/anaconda/install/" target="_blank">Anaconda</a> or <a href="https://docs.conda.io/en/latest/miniconda.html" target="_blank">Miniconda</a> must be installed.</p>
+
+        <h4>Steps to Install and Run</h4>
+        <ol>
+            <li><strong>Create a Conda Environment:</strong>
+            <pre><code>conda create -n enzyms python=3.11
+conda activate enzyms</code></pre>
+
+            <li><strong>Install Required Packages:</strong></li>
+            <pre><code>pip install asari-metabolomics rdkit pyopenms pandas matplotlib numpy==1.24.4</code></pre>
+
+            <li><strong>Run the Shell Script:</strong></li>
+            <pre><code>sh run_pipeline.sh --smi_file ./CPD041.smi --variations_file ./variations.param --params_file ./parameters.yaml --samples_file ./list_of_samples.txt --mzml_dir ./mzML-files</code></pre>
+        </ol>
+
+        <h3>3. Running as a Web Application</h3>
+        <h4>Prerequisites</h4>
+        <ul>
+            <li><a href="https://docs.anaconda.com/anaconda/install/" target="_blank">Anaconda</a> or <a href="https://docs.conda.io/en/latest/miniconda.html" target="_blank">Miniconda</a> must be installed.</li>
+            
+        </ul>
+
+        <h4>Steps to Run</h4>
+        <ol>
+            <li><strong>Create a Conda Environment:</strong></li>
+            <pre><code>conda create -n enzyms-webapp python=3.11
+conda activate enzyms-webapp</code></pre>
+
+            <li><strong>Install Required Packages:</strong></li>
+            <pre><code>pip install asari-metabolomics rdkit pyopenms pandas matplotlib numpy==1.24.4 flask</code></pre>
+
+            <li><strong>Run the Flask Application:</strong></li>
+            <pre><code>python enzyms_app.py</code></pre>
+
+            <li><strong>Access the Web Application:</strong></li>
+            <p>Open your web browser and navigate to <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a>. You can upload the required files and run the pipeline through the web interface.</p>
+        </ol>
     </div>
 </body>
 </html>
