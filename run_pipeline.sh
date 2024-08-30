@@ -27,8 +27,16 @@ done
 # Derive the compound name from the .smi file
 compound_name=$(basename "$smi_file" .smi)
 
+# Extract the reference EVC sample name from the samples file
+reference_evc=$(awk -F, '$2=="evc"{print $1; exit}' "$list_of_samples_file")
+
+if [ -z "$reference_evc" ]; then
+    echo "Error: No EVC sample found in $list_of_samples_file"
+    exit 1
+fi
+
 # Detect and align features using Asari
-asari process --mode pos --input "${mzml_dir}" --reference "${mzml_dir}/${compound_name}_EVC1.mzML" -o ${compound_name} --parameter "$asari_params_file"
+asari process --mode pos --input "${mzml_dir}" --reference "${mzml_dir}/${reference_evc}.mzML" -o ${compound_name} --parameter "$asari_params_file"
 
 # Copy peak area matrix from Asari results
 cp ${compound_name}_asari_project*/export/full_Feature_table.tsv ${compound_name}_areas.csv
