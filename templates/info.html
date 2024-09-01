@@ -80,7 +80,7 @@
             <li><strong>SMILES File</strong> (<code>*.smi</code>): Contains the molecular structure in SMILES format.</li>
             <li><strong>Variations Parameter File</strong> (<code>variations.param</code>): Contains adduct ion and mode information. Also contains information about atomic variations for anticipated products.</li>
             <li><strong>Parameter File</strong> (<code>parameters.yaml</code>): Configuration file specifying the analysis parameters.</li>
-            <li><strong>Sample List File</strong> (<code>samples.txt</code>): Contains the list of samples to be analyzed.</li>
+            <li><strong>Sample List File</strong> (<code>list_of_samples.txt</code>): Contains the list of samples to be analyzed.</li>
             <li><strong>mzML Files</strong> (<code>*.mzML</code>): Raw data files from LCMS to be analyzed. Agilent '.d' can be converted to .mzML format using ProteoWizard's msConvert program. <a href="https://proteowizard.sourceforge.io/download.html" target="_blank">ProteoWizard</a></li>
         </ul>
         
@@ -98,7 +98,7 @@
             <pre><code>docker build -t enzyms .</code></pre>
 
             <li><strong>Run the Pipeline:</strong></li>
-            <pre><code>docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output lcms-pipeline --smi_file /usr/src/app/input/CPD041.smi --variations_file ./variations.param --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files</code></pre>
+            <pre><code>docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output enzyms --smi_file /usr/src/app/input/CPD041.smi --variations_file ./variations.param --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files</code></pre>
             <ul>
                 <li><code>input</code>: Directory containing the input files.</li>
                 <li><code>output</code>: Directory where the results will be saved.</li>

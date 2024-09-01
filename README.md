@@ -16,7 +16,7 @@ To run the LCMS Data Analysis Pipeline, you need the following inputs:
 - **SMILES File** (`*.smi`): Contains the molecular structure in SMILES format.
 - **Variations Parameter File** (`variations.param`); Contains adduct ion and mode information. Also contains information about atomic variations for anticipated products.  
 - **Parameter File** (`parameters.yaml`): Configuration file specifying the analysis parameters.
-- **Sample List File** (`samples.txt`): Contains the list of samples to be analyzed.
+- **Sample List File** (`list_of_samples.txt`): Contains the list of samples to be analyzed.
 - **mzML Files** (`*.mzML`): Raw data files from LCMS to be analyzed. Agilent '.d' can be converted to .mzML format using ProteoWizard's msConvert program. [ProteoWizard](https://proteowizard.sourceforge.io/download.html)
 
 ## Installation and Usage
@@ -35,7 +35,7 @@ You can run the LCMS Data Analysis Pipeline in several ways:
     ```
 2. **Run the Pipeline**:
     ```bash
-    docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output lcms-pipeline --smi_file /usr/src/app/input/CPD041.smi --variations_file ./variations.param --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files
+    docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output enzyms --smi_file /usr/src/app/input/CPD041.smi --variations_file ./variations.param --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files
     ```
     - `input`: Directory containing the input files.
     - `output`: Directory where the results will be saved.

@@ -42,10 +42,10 @@ asari process --mode pos --input "${mzml_dir}" --reference "${mzml_dir}/${refere
 cp ${compound_name}_asari_project*/export/full_Feature_table.tsv ${compound_name}_areas.csv
 
 # Calculate m/z of substrate
-python3 scripts/calculate_substrate_mz.py --input_file ${compound_name}.smi --output_file substrate_mz.csv --parameters_file "$variations_param_file"
+python3 scripts/calculate_substrate_mz.py --input_file "$smi_file" --output_file substrate_mz.csv --parameters_file "$variations_param_file"
 
 # Calculate m/z of anticipated products
-python3 scripts/calculate_anticipated_products_mz.py --input_file ${compound_name}.smi --output_file Anticipated_products_mz.txt --parameters_file "$variations_param_file"
+python3 scripts/calculate_anticipated_products_mz.py --input_file "$smi_file" --output_file Anticipated_products_mz.txt --parameters_file "$variations_param_file"
 
 # Adjust peak areas
 python3 scripts/process_peak_area.py --csv_directory ./ --compound_mz_file substrate_mz.csv --column_type_file "$list_of_samples_file" --output_directory ./
