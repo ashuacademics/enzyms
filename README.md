@@ -4,6 +4,9 @@ The EnzyMS LCMS Data Analysis Pipeline is designed to streamline and automate th
 
 ![EnzyMS LCMS Data Analysis Pipeline](images/EnzyMS-Pipeline.png)
 
+*Figure 1: Overview of the EnzyMS LCMS Data Analysis Pipeline. This figure illustrates the workflow, starting from the input of SMILES files, parameter files, and sample lists, through the data processing stages, and ending with the generation of output files in various formats.*
+
+
 ## Features:
 
 - **Automated LCMS Data Analysis**: Streamline the processing and analysis of LCMS data with a single pipeline.
