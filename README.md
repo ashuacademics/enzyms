@@ -2,6 +2,8 @@
 
 The EnzyMS LCMS Data Analysis Pipeline is designed to streamline and automate the analysis of LCMS-QTOF data. This pipeline takes input in the form of SMILES files, parameter files for formula generation and feature detection, and sample lists, processes the data using specified configurations, and outputs analyzed data in a variety of formats including CSV and images.
 
+![EnzyMS LCMS Data Analysis Pipeline](images/EnzyMS-Pipeline.png)
+
 ## Features:
 
 - **Automated LCMS Data Analysis**: Streamline the processing and analysis of LCMS data with a single pipeline.

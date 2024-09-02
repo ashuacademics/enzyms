@@ -1,0 +1,9 @@
+adduct: "[M+H+]"
+mode: pos
+H_variation: [-4, 4]
+C_variation: [-1, 0]
+O_variation: [-1, 3]
+N_variation: [0, 0]
+F_variation: [-1, 0]
+Cl_variation: [0, 0]
+
