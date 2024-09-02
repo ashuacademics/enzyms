@@ -69,7 +69,7 @@ You can run the LCMS Data Analysis Pipeline in several ways:
 
 #### Prerequisites
 - [Anaconda](https://docs.anaconda.com/anaconda/install/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) must be installed.
-- [Flask](https://flask.palletsprojects.com/) and other dependencies as listed in `requirements.txt`.
+- [Flask](https://flask.palletsprojects.com/).
 
 #### Steps to Run
 1. **Create a Conda Environment**:
