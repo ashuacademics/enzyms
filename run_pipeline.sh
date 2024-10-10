@@ -51,7 +51,7 @@ python3 scripts/calculate_anticipated_products_mz.py --input_file "$smi_file" --
 python3 scripts/process_peak_area.py --csv_directory ./ --compound_mz_file substrate_mz.csv --column_type_file "$list_of_samples_file" --output_directory ./
 
 # Get top 100 peaks
-python3 scripts/get_significant_peaks.py --input_files ./processed_${compound_name}.csv --column_type_file "$list_of_samples_file" --output_directory ./
+python3 scripts/get_significant_peaks.py --input_files ./processed_${compound_name}.csv --column_type_file "$list_of_samples_file" --output_directory ./ --param_file "$variations_param_file"
 
 # Match simulated products file
 python3 scripts/match_significant_peaks_with_anticipated_mz.py --input_dir ./ --reference_file Anticipated_products_mz.txt --output_dir ./ --tolerance 0.01
