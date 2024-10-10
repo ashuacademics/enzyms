@@ -4,10 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
+import yaml  # To read the YAML parameter file
 
 def extract_compound_name_from_filename(filename):
     # Extract the compound name from the input filename
-    # Assuming the filename format is "processed_CompoundName.csv"
     parts = os.path.splitext(os.path.basename(filename))[0].split('_')
     if len(parts) == 2 and parts[0] == "processed":
         return parts[1]
@@ -15,12 +15,18 @@ def extract_compound_name_from_filename(filename):
         return None
 
 def load_column_types(column_type_file):
-    # Updated function to load sample columns based on the new file format with headers
+    # Load sample columns based on the new file format with headers
     column_types = pd.read_csv(column_type_file)
     sample_columns = column_types[column_types['Sample'] == 'sample']['Enzyme'].tolist()
     return sample_columns
 
-def plot_3d_mountain(input_files, column_type_file, output_directory):
+def load_variations_param(param_file):
+    # Load parameters from the variations.param file
+    with open(param_file, 'r') as file:
+        params = yaml.safe_load(file)
+    return params
+
+def plot_3d_mountain(input_files, column_type_file, output_directory, num_peaks):
     sample_columns = load_column_types(column_type_file)
 
     if not os.path.exists(output_directory):
@@ -81,12 +87,12 @@ def plot_3d_mountain(input_files, column_type_file, output_directory):
         # Prepare data of the top peaks with retention time
         top_peaks_data = []
 
-        # Sort the peaks and select the top 100
-        sorted_peak_values = np.sort(Z, axis=None)[::-1][:100]
+        # Sort the peaks and select the top `num_peaks`
+        sorted_peak_values = np.sort(Z, axis=None)[::-1][:num_peaks]
         sorted_peak_indices = np.argwhere(np.isin(Z, sorted_peak_values))
 
         for peak_idx in sorted_peak_indices:
-            row_idx, col_idx = peak_idx[0], peak_idx[1]  # Corrected the typo here
+            row_idx, col_idx = peak_idx[0], peak_idx[1]
             sample_name = data.columns[col_idx]
             mz_value = mz_values.iloc[row_idx]
             rt_value = retention_time.iloc[row_idx]
@@ -98,7 +104,6 @@ def plot_3d_mountain(input_files, column_type_file, output_directory):
             'Retention Time (sec)': rt_value,
             'Value': peak_value
         })
-
 
         # Define the output filename for the highest peaks data
         peaks_output_file_name = f"highest_peaks_{file_base_name}.csv"
@@ -114,6 +119,12 @@ if __name__ == "__main__":
     parser.add_argument('--input_files', type=str, nargs='+', help='Paths to the input CSV files')
     parser.add_argument('--column_type_file', type=str, help='Path to the file with column types')
     parser.add_argument('--output_directory', type=str, help='Directory to save the 3D mountain plots and peak data CSVs')
+    parser.add_argument('--param_file', type=str, help='Path to the variations.param file')
 
     args = parser.parse_args()
-    plot_3d_mountain(args.input_files, args.column_type_file, args.output_directory)
+
+    # Load the number of peaks from the variations.param file
+    params = load_variations_param(args.param_file)
+    num_peaks = params.get('num_peaks', 100)  # Default to 100 if not provided
+
+    plot_3d_mountain(args.input_files, args.column_type_file, args.output_directory, num_peaks)
