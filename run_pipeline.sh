@@ -63,7 +63,7 @@ python3 scripts/plot_scatterplot_matched_peaks.py --input_dir ./ --output_dir ./
 mkdir -p output
 
 # Move all CSV and PNG files to the output directory
-find . -maxdepth 1 -type f \( -name "*.csv" -o -name "*.png" \) -exec mv {} output/ \;
+find . -maxdepth 1 -type f \( -name "*.csv" -o -name "*.png" -o -name "*.txt" \) -exec mv {} output/ \;
 
 # Ensure the files in the output directory have the correct permissions to be removed later
 chmod -R 777 output
