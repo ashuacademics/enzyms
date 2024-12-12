@@ -19,9 +19,9 @@ The EnzyMS LCMS Data Analysis Pipeline is designed to streamline and automate th
 To run the LCMS Data Analysis Pipeline, you need the following inputs:
 
 - **SMILES File** (`*.smi`): Contains the molecular structure in SMILES format.
-- **Variations Parameter File** (`variations.param`); Contains adduct ion and mode information. Also contains information about atomic variations for anticipated products.  
-- **Parameter File** (`parameters.yaml`): Configuration file specifying the analysis parameters.
-- **Sample List File** (`list_of_samples.txt`): Contains the list of samples to be analyzed.
+- **Variations Parameter File** (`variations.param`); Contains adduct ion and mode information. Also contains information about atomic variations for anticipated products.  Please see sample variations file in 'input' directory.
+- **Parameter File** (`parameters.yaml`): Configuration file specifying the analysis parameters. Please see sample parameter file in 'input' directory.
+- **Sample List File** (`list_of_samples.txt`): Contains the list of samples to be analyzed. Please see list of samples file in input folder.
 - **mzML Files** (`*.mzML`): Raw data files from LCMS to be analyzed. Agilent '.d' can be converted to .mzML format using ProteoWizard's msConvert program. [ProteoWizard](https://proteowizard.sourceforge.io/download.html)
 
 ## Installation and Usage
