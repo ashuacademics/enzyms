@@ -37,12 +37,18 @@ Cl_variation: Variation range for Chlorine (list of two integers)
 '''
 
 def calculateMass(formula: str, adduct_mass: float, charge: int) -> float:
+    """
+    Calculate the m/z value for a given formula, adduct mass, and charge.
+    """
     ef = EmpiricalFormula(formula)
     mono_weight = ef.getMonoWeight()
     mz = (mono_weight + adduct_mass) / abs(charge)
     return mz
 
 def get_element_counts(formula):
+    """
+    Parse a molecular formula to get element counts.
+    """
     counts = {}
     elements = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
     for element, count in elements:
@@ -50,21 +56,35 @@ def get_element_counts(formula):
     return counts
 
 def simulate_variations(element_counts, variations):
-    all_changes = {}
-    for element, (min_change, max_change) in variations.items():
-        all_changes[element] = range(min_change, max_change + 1)
+    """
+    Simulate variations for all elements in the variations dictionary,
+    including elements not present in the original formula.
+    """
+    # Ensure all elements in variations are represented in the counts
+    for element in variations:
+        if element not in element_counts:
+            element_counts[element] = 0
 
-    simulated_formulas = set()  # Use a set to avoid duplicates
+    # Generate ranges for each element based on variations
+    all_changes = {element: range(min_change, max_change + 1)
+                   for element, (min_change, max_change) in variations.items()}
+
+    # Generate all combinations of variations
+    simulated_formulas = set()
     for changes in product(*all_changes.values()):
         new_counts = element_counts.copy()
         for i, element in enumerate(all_changes):
-            new_counts[element] = max(0, new_counts.get(element, 0) + changes[i])
+            new_counts[element] = max(0, new_counts[element] + changes[i])
+        # Construct new formula as a string
         new_formula = ''.join(f"{elem}{count}" for elem, count in new_counts.items() if count)
-        simulated_formulas.add(new_formula)  # Add to set
-    
+        simulated_formulas.add(new_formula)
+
     return simulated_formulas
 
 def calculate_mz_from_file(filename, output_filename, adduct, mode, variations):
+    """
+    Calculate m/z values for simulated formulas of substrates in the input file.
+    """
     results = []
 
     adduct_dict = adducts.positive_adducts if mode == 'pos' else adducts.negative_adducts
@@ -78,7 +98,7 @@ def calculate_mz_from_file(filename, output_filename, adduct, mode, variations):
         formula = rdMolDescriptors.CalcMolFormula(mol)
         element_counts = get_element_counts(formula)
         simulated_formulas = simulate_variations(element_counts, variations)
-        
+
         for sim_formula in simulated_formulas:
             adduct_mass, charge = adduct_dict[adduct]
             mz = calculateMass(sim_formula, adduct_mass, charge)
@@ -87,7 +107,7 @@ def calculate_mz_from_file(filename, output_filename, adduct, mode, variations):
     with open(output_filename, 'w') as f:
         f.write("Substrate,SimulatedFormula,Simulated-m/z\n")
         for substrate, formula, mz in results:
-            f.write(f"{substrate},{formula},{mz}\n")
+            f.write(f"{substrate},{formula},{mz:.4f}\n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Calculate m/z of substrates from SMILES data.')
