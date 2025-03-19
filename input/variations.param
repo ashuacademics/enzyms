@@ -1,9 +1,9 @@
-adduct: "[M+H+]"
+adduct: "[M+Na]+"
 mode: pos
-H_variation: [-4, 4]
+H_variation: [-3, 3]
 C_variation: [-1, 0]
 O_variation: [-1, 3]
 N_variation: [0, 0]
-F_variation: [-1, 0]
-Cl_variation: [0, 0]
+F_variation: [0, 0]
+Cl_variation: [0, 1]
 num_peaks: 100
