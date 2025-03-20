@@ -1,5 +1,4 @@
 Enzyme,Sample
-Soraphen_A10,sample
 Soraphen_A1,sample
 Soraphen_A2,sample
 Soraphen_A3,sample
@@ -9,7 +8,6 @@ Soraphen_A6,sample
 Soraphen_A7,sample
 Soraphen_A8,sample
 Soraphen_A9,sample
-Soraphen_B10,sample
 Soraphen_B1,sample
 Soraphen_B2,sample
 Soraphen_B3,sample
@@ -19,7 +17,6 @@ Soraphen_B6,sample
 Soraphen_B7,sample
 Soraphen_B8,sample
 Soraphen_B9,sample
-Soraphen_C10,sample
 Soraphen_C1,sample
 Soraphen_C2,sample
 Soraphen_C3,sample
@@ -30,7 +27,6 @@ Soraphen_C7,sample
 Soraphen_C8,sample
 Soraphen_C9,sample
 Soraphen_D10,sample
-Soraphen_D1,sample
 Soraphen_D2,sample
 Soraphen_D3,sample
 Soraphen_D4,sample
@@ -58,7 +54,6 @@ Soraphen_F5,sample
 Soraphen_F6,sample
 Soraphen_F7,sample
 Soraphen_F8,sample
-Soraphen_F9,sample
 Soraphen_G10,sample
 Soraphen_G1,sample
 Soraphen_G2,sample
@@ -68,7 +63,6 @@ Soraphen_G5,sample
 Soraphen_G6,sample
 Soraphen_G7,sample
 Soraphen_G8,sample
-Soraphen_G9,sample
 Soraphen_H10,sample
 Soraphen_H1,sample
 Soraphen_H2,sample
@@ -78,4 +72,3 @@ Soraphen_H5,sample
 Soraphen_H6,sample
 Soraphen_H7,sample
 Soraphen_H8,sample
-Soraphen_H9,sample
