@@ -1,4 +1,4 @@
-# Conversion of LC-MS Data Files (`*.mzML`)
+# Conversion of LC-MS Data Files
 
 To run the EnzyMS LC-MS Data Analysis Pipeline, input LC-MS data must be in the standard **`.mzML`** format.
 
