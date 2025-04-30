@@ -40,7 +40,7 @@ You can run the LCMS Data Analysis Pipeline in several ways:
     ```
 2. **Run the Pipeline**:
     ```bash
-    docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output enzyms --smi_file /usr/src/app/input/SoraphenA.smi --variations_file ./variations.param --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files
+    docker run --rm -v $(pwd)/input:/usr/src/app/input -v $(pwd)/output:/usr/src/app/output enzyms --smi_file /usr/src/app/input/SoraphenA.smi --variations_file /usr/src/app/input/variations.param --params_file /usr/src/app/input/parameters.yaml --samples_file /usr/src/app/input/list_of_samples.txt --mzml_dir /usr/src/app/input/mzML-files
     ```
     - `input`: Directory containing the input files.
     - `output`: Directory where the results will be saved.

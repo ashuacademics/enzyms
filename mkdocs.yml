@@ -1,11 +1,26 @@
-site_name: EnzyMS LCMS Data Analysis Pipeline
+# File              : mkdocs.yml
+# Author            : Ashutosh Kumar <kums@zhaw.ch>
+# Date              : 24.04.2025
+# Last Modified Date: 24.04.2025
+# Last Modified By  : Ashutosh Kumar <kums@zhaw.ch>
+site_name: EnzyMS
 theme:
   name: material
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Input Files: input_files.md
   - Usage: usage.md
+  - Input Files: input_files.md
   - Pipeline Steps: pipeline_steps.md
   - Output: output.md
-  - mzML Conversion: conversion_to_mzml.md
+  - Conversion to mzML: conversion_to_mzml.md
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+extra_css:
+  - stylesheets/extra.css  # optional
+
+
