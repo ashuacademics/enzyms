@@ -62,8 +62,11 @@ def plot_product_peaks(mzml_paths, mz_product, tolerance, output_path, sample_ma
     # Plotting
     fig, axs = plt.subplots(num_rows, num_columns, figsize=(10, 4 * num_rows), sharex=True)
 
-    # Flatten the axs array for easy iteration
-    axs = axs.flatten()
+    # Ensure axs is always iterable
+    if num_samples == 1:
+        axs = [axs]
+    else:
+        axs = axs.flatten()
 
     # Plot for each sample
     for i, (rt_product, intensity_product, sample_name) in enumerate(zip(rt_products, intensity_products, sample_names)):
