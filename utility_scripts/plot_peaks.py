@@ -54,7 +54,7 @@ def plot_product_peaks(mzml_paths, mz_product, tolerance, output_path, sample_ma
         sample_name = sample_mapping.get(sample_name_key, sample_name_key)
         sample_names.append(sample_name)
 
-    # Determine the number of rows needed for two columns
+    # Determine the number of rows needed for one columns
     num_samples = len(mzml_paths)
     num_columns = 1
     num_rows = (num_samples + num_columns - 1) // num_columns
