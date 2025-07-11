@@ -2,6 +2,8 @@
 
 📚 **Full Documentation:** [https://enzyms.readthedocs.io/en/latest/](https://enzyms.readthedocs.io/en/latest/)
 
+📄 **Related Publication:** [Streamlining enzyme discovery and development through data analysis and computation](https://doi.org/10.1016/j.checat.2025.101445)
+
 The EnzyMS LC-MS Data Analysis Pipeline is designed to streamline and automate the analysis of LCMS-QTOF data. This pipeline takes input in the form of SMILES files, parameter files for formula generation and feature detection, and sample lists, processes the data using specified configurations, and outputs analyzed data in a variety of formats including CSV and images.
 
 ![Overview of the EnzyMS LC-MS data analysis pipeline](images/Figure1.png)
