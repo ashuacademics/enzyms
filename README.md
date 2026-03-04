@@ -64,7 +64,7 @@ You can run the LCMS Data Analysis Pipeline in several ways:
     ```
 3. **Run the Shell Script**:
     ```bash
-    sh run_pipeline.sh --smi_file ./SoraphenA.smi --variations_file ./variations.param --params_file ./parameters.yaml --samples_file ./list_of_samples.txt --mzml_dir ./mzML-files
+    sh run_pipeline.sh --smi_file ./input/SoraphenA.smi --variations_file ./input/variations.param --params_file ./input/parameters.yaml --samples_file ./input/list_of_samples.txt --mzml_dir ./input/mzML-files
     ```
 
 ### 3. Running as a Web Application
