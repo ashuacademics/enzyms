@@ -14,10 +14,14 @@ RUN pip install --no-cache-dir \
     pyopenms \
     pandas \
     matplotlib \
-    numpy==1.24.4
+    numpy==1.24.4 \
+    flask
+
+# Expose Flask port
+EXPOSE 5000
 
 # Make the script executable
-RUN chmod +x run_pipeline.sh
+RUN chmoKd +x run_pipeline.sh
 
 # Set the default command to run the script with the provided arguments
 ENTRYPOINT ["./run_pipeline.sh"]

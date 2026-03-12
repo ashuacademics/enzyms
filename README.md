@@ -90,3 +90,9 @@ You can run the LCMS Data Analysis Pipeline in several ways:
 4. **Access the Web Application**:
     Open your web browser and navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000). You can upload the required files and run the pipeline through the web interface.
 
+    Alternatively, if the enzyms docker image is creaeted, the webapp can also be started from docker.
+
+    ```bash
+    docker run -p 5000:5000 --entrypoint python enzyms enzyms_app.py
+    ```
+    
