@@ -96,7 +96,7 @@
         <ul>
             {% for file in files %}
                 <li>
-                    <a href="{{ url_for('output_file', filename=file) }}" target="_blank">{{ file.rsplit('.', 1)[0] }}</a>
+                    <a href="{{ url_for('output_file', session_id=session_id, filename=file) }}" target="_blank">{{ file.rsplit('.', 1)[0] }}</a>
                     <div class="file-description">
                         {% if file.endswith('_areas.csv') %}
                             Detected and aligned features for the tested substrate.
