@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import yaml
 import argparse
 from rdkit import Chem
 from rdkit.Chem import rdMolDescriptors
@@ -8,6 +7,7 @@ from pyopenms import EmpiricalFormula
 import re
 from itertools import product
 import adducts  
+from config_loader import load_config
 
 '''
 This script calculates the m/z of the anticipated products of a substrate based on its SMILES data. 
@@ -23,7 +23,7 @@ python calculate_anticipated_products_mz.py --input_file input.smi --output_file
 Arguments:
 --input_file: Path to the input .smi file
 --output_file: Path to save the output results
---parameters_file: Path to the variations.param file
+--parameters_file: Path to the variations parameter file (.json, .yaml, .yml, or .param)
 
 The variations.param file should include:
 adduct: The adduct ion type
@@ -113,13 +113,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Calculate m/z of substrates from SMILES data.')
     parser.add_argument('--input_file', type=str, required=True, help='Path to the input .smi file')
     parser.add_argument('--output_file', type=str, required=True, help='Path to save the output results')
-    parser.add_argument('--parameters_file', type=str, required=True, help='Path to the variations.param file')
+    parser.add_argument('--parameters_file', type=str, required=True, help='Path to the variations parameter file (.json, .yaml, .yml, or .param)')
 
     args = parser.parse_args()
 
-    # Load the parameters from the variations.param file
-    with open(args.parameters_file, 'r') as file:
-        params = yaml.safe_load(file)
+    # Load parameters from JSON or YAML.
+    params = load_config(args.parameters_file)
 
     variations = {
         'H': params['H_variation'],

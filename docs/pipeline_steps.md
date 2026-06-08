@@ -20,7 +20,7 @@ This document describes a simple, step-by-step process for analyzing LC-MS data 
 
 ### 1. Detect & Align Features with Asari
 
-The pipeline begins by using the feature detection and alignment algorithms from [Asari](https://asari.readthedocs.io/) to identify mass-to-charge ratios (m/z) and retention times of compounds across all samples. Asari’s alignment algorithm matches similar features across runs while correcting for retention time shifts. Detection and alignment parameters are provided through the parameters.yaml file; while the default settings are generally effective, minor adjustments may be needed depending on the sample. This step also requires a reference sample, which the pipeline automatically selects as the first empty vector control (EVC) listed in the sample list file (list_of_samples.txt). An example command to run this step is:
+The pipeline begins by using the feature detection and alignment algorithms from [Asari](https://asari.readthedocs.io/) to identify mass-to-charge ratios (m/z) and retention times of compounds across all samples. Asari’s alignment algorithm matches similar features across runs while correcting for retention time shifts. Detection and alignment parameters are provided through a YAML or JSON parameter file; while the default settings are generally effective, minor adjustments may be needed depending on the sample. This step also requires a reference sample, which the pipeline automatically selects as the first empty vector control (EVC) listed in the sample list file (list_of_samples.txt). An example command to run this step is:
 
 ```
 asari process \
@@ -28,7 +28,7 @@ asari process \
   --input "${mzml_dir}" \
   --reference "${mzml_dir}/${reference_evc}.mzML" \
   -o ${compound_name} \
-  --parameter "$parameters.yaml"
+  --parameters "$parameters.json"
 ```
 
 ### 2. Extract Feature Table (m/z, Retention Time, and Peak Areas)
@@ -38,7 +38,7 @@ After feature detection and alignment, the next step is to extract the feature m
 
 ### 3. Calculate the mass-to-charge ratio (m/z) of substrate and anticipated products
 
-In this step, two Python scripts are used to calculate the expected m/z values for both the substrate and its potential products. The first script reads a SMILES file along with a YAML parameter file specifying the adduct type and ionization mode. It uses [RDKit](https://www.rdkit.org/) to generate the molecular formula for each substrate and [pyOpenMS](https://pyopenms.readthedocs.io/) to calculate the monoisotopic mass. The selected adduct is then applied to compute and output the substrate’s m/z values in a CSV file. The second script extends this process by simulating chemical variations (e.g., changes in the number of H, C, O, N, F, and Cl atoms) to generate a wide range of anticipated product formulas. It calculates and records the m/z values for all simulated products, producing a comprehensive list that will be used later to match detected features with predicted compounds.
+In this step, two Python scripts are used to calculate the expected m/z values for both the substrate and its potential products. The first script reads a SMILES file along with a YAML or JSON parameter file specifying the adduct type and ionization mode. It uses [RDKit](https://www.rdkit.org/) to generate the molecular formula for each substrate and [pyOpenMS](https://pyopenms.readthedocs.io/) to calculate the monoisotopic mass. The selected adduct is then applied to compute and output the substrate’s m/z values in a CSV file. The second script extends this process by simulating chemical variations (e.g., changes in the number of H, C, O, N, F, and Cl atoms) to generate a wide range of anticipated product formulas. It calculates and records the m/z values for all simulated products, producing a comprehensive list that will be used later to match detected features with predicted compounds.
 
 Example commands to run these scripts are:
 

@@ -12,7 +12,7 @@ To run the EnzyMS pipeline successfully, you must provide the following five typ
 ```
 C[C@H]1/C=C/[C@H]([C@H](CCCC[C@H](OC(=O)[C@H]([C@@]2([C@@H]([C@H]([C@@H]([C@H]1O2)C)O)OC)O)C)C3=CC=CC=C3)OC)OC SoraphenA
 ```
-## ⚙️ 2. Variations Parameter File (`variations.param`)
+## ⚙️ 2. Variations Parameter File (`variations.param`, `.yaml`, or `.json`)
 
 - Describes atomic-level variations and adducts to predict possible biotransformations.
 - Required fields typically include:
@@ -35,7 +35,7 @@ F_variation: [0, 0]
 Cl_variation: [0, 1]
 num_peaks: 100
 ```
-## 🛠 3. ASARI Parameters File (`parameters.yaml`)
+## 🛠 3. ASARI Parameters File (`parameters.yaml` or `.json`)
 
 - Configuration file for the [Asari](https://asari.readthedocs.io/) feature detection engine.
 - This file contains parameters for retention time windows, peak detection, feature alignment etc

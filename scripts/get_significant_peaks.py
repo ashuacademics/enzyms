@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-import yaml  # To read the YAML parameter file
+from config_loader import load_config
 
 def extract_compound_name_from_filename(filename):
     # Extract the compound name from the input filename
@@ -21,10 +21,7 @@ def load_column_types(column_type_file):
     return sample_columns
 
 def load_variations_param(param_file):
-    # Load parameters from the variations.param file
-    with open(param_file, 'r') as file:
-        params = yaml.safe_load(file)
-    return params
+    return load_config(param_file)
 
 def plot_3d_mountain(input_files, column_type_file, output_directory, num_peaks):
     sample_columns = load_column_types(column_type_file)
@@ -119,7 +116,7 @@ if __name__ == "__main__":
     parser.add_argument('--input_files', type=str, nargs='+', help='Paths to the input CSV files')
     parser.add_argument('--column_type_file', type=str, help='Path to the file with column types')
     parser.add_argument('--output_directory', type=str, help='Directory to save the 3D mountain plots and peak data CSVs')
-    parser.add_argument('--param_file', type=str, help='Path to the variations.param file')
+    parser.add_argument('--param_file', type=str, help='Path to the variations parameter file (.json, .yaml, .yml, or .param)')
 
     args = parser.parse_args()
 

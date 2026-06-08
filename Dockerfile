@@ -1,5 +1,5 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11
+# Use a pinned Python runtime to keep Docker rebuilds reproducible.
+FROM python:3.11.15
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
@@ -9,12 +9,13 @@ COPY . .
 
 # Install dependencies
 RUN pip install --no-cache-dir \
-    asari-metabolomics \
-    rdkit \
-    pyopenms \
-    pandas \
-    matplotlib \
-    numpy==1.24.4
+    asari-metabolomics==1.17.1 \
+    rdkit==2026.3.3 \
+    pyopenms==3.2.0 \
+    pandas==2.3.3 \
+    matplotlib==3.10.9 \
+    numpy==1.24.4 \
+    PyYAML==6.0.3
 
 # Make the script executable
 RUN chmod +x run_pipeline.sh

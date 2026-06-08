@@ -35,11 +35,29 @@ if [ -z "$reference_evc" ]; then
     exit 1
 fi
 
+# Asari 1.17 parses its parameters as both YAML and JSON. Normalize accepted
+# YAML/JSON input to JSON so both parser passes succeed.
+normalized_asari_params=$(mktemp --suffix=.json)
+trap 'rm -f "$normalized_asari_params"' EXIT
+python3 - "$asari_params_file" "$normalized_asari_params" <<'PY'
+import json
+import sys
+
+import yaml
+
+source, destination = sys.argv[1], sys.argv[2]
+with open(source, "r") as handle:
+    params = yaml.safe_load(handle)
+
+with open(destination, "w") as handle:
+    json.dump(params, handle)
+PY
+
 # Detect and align features using Asari
-asari process --mode pos --input "${mzml_dir}" --reference "${mzml_dir}/${reference_evc}.mzML" -o ${compound_name} --parameter "$asari_params_file"
+asari process --mode pos --input "${mzml_dir}" --reference "${mzml_dir}/${reference_evc}.mzML" -o "$compound_name" --parameters "$normalized_asari_params"
 
 # Copy peak area matrix from Asari results
-cp ${compound_name}_asari_project*/export/full_Feature_table.tsv ${compound_name}_areas.csv
+cp ${compound_name}_asari_project*/export/full_Feature_table.tsv "${compound_name}_areas.csv"
 
 # Calculate m/z of substrate
 python3 scripts/calculate_substrate_mz.py --input_file "$smi_file" --output_file substrate_mz.csv --parameters_file "$variations_param_file"
