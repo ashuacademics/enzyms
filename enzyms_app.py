@@ -4,6 +4,7 @@ import subprocess
 import pandas as pd
 import zipfile
 import csv
+import uuid
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key_here'
@@ -27,6 +28,18 @@ def info():
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
+    # Generate a unique ID for this upload session
+    session_id = str(uuid.uuid4())
+    
+    # Create session-specific directories
+    session_upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
+    session_output_folder = os.path.join(app.config['OUTPUT_FOLDER'], session_id)
+    session_mzml_folder = os.path.join(session_upload_folder, 'mzML-files')
+
+    os.makedirs(session_upload_folder, exist_ok=True)
+    os.makedirs(session_output_folder, exist_ok=True)
+    os.makedirs(session_mzml_folder, exist_ok=True)
+        
     # Save uploaded files
     smiles_file = request.files['smiles_file']
     variations_file = request.files['variations_file']
@@ -34,27 +47,21 @@ def upload_files():
     samples_file = request.files['samples_file']
     mzml_files = request.files.getlist('mzml_files')
     
-    smiles_file_path = os.path.join(app.config['UPLOAD_FOLDER'], smiles_file.filename)
-    variations_file_path = os.path.join(app.config['UPLOAD_FOLDER'], variations_file.filename)
-    params_file_path = os.path.join(app.config['UPLOAD_FOLDER'], params_file.filename)
-    samples_file_path = os.path.join(app.config['UPLOAD_FOLDER'], samples_file.filename)
-    
-    smiles_file.save(smiles_file_path)
-    variations_file.save(variations_file_path)
-    params_file.save(params_file_path)
-    samples_file.save(samples_file_path)
+    smiles_file.save(os.path.join(session_upload_folder, smiles_file.filename))
+    variations_file.save(os.path.join(session_upload_folder, variations_file.filename))
+    params_file.save(os.path.join(session_upload_folder, params_file.filename))
+    samples_file.save(os.path.join(session_upload_folder, samples_file.filename))
 
     # Save mzML files
     for mzml_file in mzml_files:
-        mzml_file_path = os.path.join(app.config['MZML_FOLDER'], mzml_file.filename)
-        mzml_file.save(mzml_file_path)
+        mzml_file.save(os.path.join(session_mzml_folder, mzml_file.filename))
 
     # Run Docker command
     docker_command = [
         "docker", "run", "--rm",
-        "-v", f"{os.path.abspath(app.config['UPLOAD_FOLDER'])}:/usr/src/app/input",
-        "-v", f"{os.path.abspath(app.config['OUTPUT_FOLDER'])}:/usr/src/app/output",
-        "-v", f"{os.path.abspath(app.config['MZML_FOLDER'])}:/usr/src/app/input/mzML-files",
+        "-v", f"{os.path.abspath(session_upload_folder)}:/usr/src/app/input",
+        "-v", f"{os.path.abspath(session_output_folder)}:/usr/src/app/output",
+        "-v", f"{os.path.abspath(session_mzml_folder)}:/usr/src/app/input/mzML-files",
         "enzyms",
         "--smi_file", f"/usr/src/app/input/{smiles_file.filename}",
         "--variations_file", f"/usr/src/app/input/{variations_file.filename}",
@@ -67,14 +74,14 @@ def upload_files():
     subprocess.run(docker_command, cwd=app.config['UPLOAD_FOLDER'])
 
     # Create a ZIP file of the output
-    zip_filename = "output_files.zip"
+    zip_filename = f"{session_id}.zip"
     zip_filepath = os.path.join(app.config['ZIP_FOLDER'], zip_filename)
     with zipfile.ZipFile(zip_filepath, 'w') as zipf:
         for root, dirs, files in os.walk(app.config['OUTPUT_FOLDER']):
             for file in files:
                 zipf.write(os.path.join(root, file), arcname=file)
 
-    return redirect(url_for('results'))
+    return redirect(url_for('results', session_id=session_id))
 
 def detect_delimiter(csv_file):
     with open(csv_file, 'r') as f:
@@ -83,25 +90,24 @@ def detect_delimiter(csv_file):
         delimiter = sniffer.sniff(first_line).delimiter
         return delimiter
 
-@app.route('/results', methods=['GET'])
-def results():
+@app.route('/results/<session_id>', methods=['GET'])
+def results(session_id):
     # Display available files in the output directory
-    files = os.listdir(app.config['OUTPUT_FOLDER'])
-    return render_template('results.html', files=files)
+    session_output_folder = os.path.join(app.config['OUTPUT_FOLDER'], session_id)
+    files = os.listdir(session_output_folder)
+    return render_template('results.html', files=files, session_id=session_id)
 
-@app.route('/output/<filename>')
-def output_file(filename):
+@app.route('/output/<session_id>/<filename>')
+def output_file(session_id, filename):
     # Serve images and CSV files
-    if filename.endswith('.png') or filename.endswith('.jpg'):
-        return send_from_directory(app.config['OUTPUT_FOLDER'], filename)
-    elif filename.endswith('.csv'):
-        return redirect(url_for('display_csv', filename=filename))
-    else:
-        return send_from_directory(app.config['OUTPUT_FOLDER'], filename)
+    session_output_folder = os.path.join(app.config['OUTPUT_FOLDER'], session_id)
+    if filename.endswith('.csv'):
+        return redirect(url_for('display_csv', session_id=session_id, filename=filename))
+    return send_from_directory(session_output_folder, filename)
 
-@app.route('/csv/<filename>')
-def display_csv(filename):
-    csv_path = os.path.join(app.config['OUTPUT_FOLDER'], filename)
+@app.route('/csv/<session_id>/<filename>')
+def display_csv(session_id, filename):
+    csv_path = os.path.join(app.config['OUTPUT_FOLDER'], session_id, filename)
     delimiter = detect_delimiter(csv_path)
     df = pd.read_csv(csv_path, delimiter=delimiter)
 
@@ -131,4 +137,4 @@ def download_zip(filename):
         return redirect(url_for('results'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
